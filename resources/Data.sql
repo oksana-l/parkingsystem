@@ -1,4 +1,5 @@
 /* Setting up PROD DB */
+drop database if exists prod;
 create database prod;
 use prod;
 
@@ -12,6 +13,7 @@ create table ticket(
  ID int PRIMARY KEY AUTO_INCREMENT,
  PARKING_NUMBER int NOT NULL,
  VEHICLE_REG_NUMBER varchar(10) NOT NULL,
+ RECURRING boolean,
  PRICE double,
  IN_TIME DATETIME NOT NULL,
  OUT_TIME DATETIME,
@@ -26,6 +28,7 @@ insert into parking(PARKING_NUMBER,AVAILABLE,TYPE) values(5,true,'BIKE');
 commit;
 
 /* Setting up TEST DB */
+drop database if exists test;
 create database test;
 use test;
 
@@ -39,6 +42,7 @@ create table ticket(
  ID int PRIMARY KEY AUTO_INCREMENT,
  PARKING_NUMBER int NOT NULL,
  VEHICLE_REG_NUMBER varchar(10) NOT NULL,
+ RECURRING boolean,
  PRICE double,
  IN_TIME DATETIME NOT NULL,
  OUT_TIME DATETIME,
@@ -51,3 +55,4 @@ insert into parking(PARKING_NUMBER,AVAILABLE,TYPE) values(3,true,'CAR');
 insert into parking(PARKING_NUMBER,AVAILABLE,TYPE) values(4,true,'BIKE');
 insert into parking(PARKING_NUMBER,AVAILABLE,TYPE) values(5,true,'BIKE');
 commit;
+
