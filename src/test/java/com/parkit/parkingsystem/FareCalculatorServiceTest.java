@@ -1,17 +1,20 @@
 package com.parkit.parkingsystem;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.Date;
+
+import org.apache.commons.math3.util.Precision;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.Date;
 
 public class FareCalculatorServiceTest {
 
@@ -39,8 +42,8 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals(ticket.getPrice(), Fare.CAR_RATE_PER_HOUR);
-    }
+        assertEquals(0.5 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
+    } 
 
     @Test
     public void calculateFareBike(){
@@ -53,7 +56,7 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals(ticket.getPrice(), Fare.BIKE_RATE_PER_HOUR);
+        assertEquals(0.5 * Fare.BIKE_RATE_PER_HOUR, ticket.getPrice());
     }
 
     @Test
@@ -93,7 +96,7 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals((0.75 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice() );
+        assertEquals((0.25 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice() );
     }
 
     @Test
@@ -107,7 +110,8 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals( (0.75 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
+        double price = Precision.round(0.25 * Fare.CAR_RATE_PER_HOUR, 2);
+        assertEquals( price, ticket.getPrice());
     }
 
     @Test
@@ -121,7 +125,7 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals( (24 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
+        assertEquals( (23.5 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
     }
 
 }
