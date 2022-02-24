@@ -88,6 +88,22 @@ public class TicketDAO {
         }
         return ticket;
     }
+    
+    public int getID(String vehicleRegNumber) {
+    	int id = 0;
+        Connection con = null;
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_ID_TICKET);
+            ps.setString(1,vehicleRegNumber);
+            ps.execute();
+        } catch (Exception ex) {
+            logger.error("Error fetching next available slot",ex);
+        } finally {
+            dataBaseConfig.closeConnection(con);
+        }
+		return id;
+    }
 
     public boolean updateTicket(Ticket ticket) {
         Connection con = null;
