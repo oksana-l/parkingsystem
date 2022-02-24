@@ -39,11 +39,15 @@ public class ParkingService {
                 Date inTime = new Date();
                 Ticket ticket = new Ticket();
                 int ticketID = ticket.getId();
+                if (TicketDAO.isRecurring(ticket)) {
+                	ticket.setRecurring(true);
+                } else {
+                	ticket.setRecurring(false);
+                }
 				//ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, RECURRING, PRICE, IN_TIME, OUT_TIME)
                 ticket.setId(ticketID );
                 ticket.setParkingSpot(parkingSpot);
                 ticket.setVehicleRegNumber(vehicleRegNumber);
-                ticket.setRecurring(false);
                 ticket.setPrice(0);
                 ticket.setInTime(inTime);
                 ticket.setOutTime(null);

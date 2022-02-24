@@ -18,35 +18,38 @@ public class TicketDAO {
 
     private static final Logger logger = LogManager.getLogger("TicketDAO");
 
-    public DataBaseConfig dataBaseConfig = new DataBaseConfig();
+    public static DataBaseConfig dataBaseConfig = new DataBaseConfig();
+    
+    public static boolean isRecurring(Ticket ticket) {
+        Connection con = null;
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.QUERY_CHECK_TICKET);
+            ps.setString(1, ticket.getVehicleRegNumber());
+            ps.execute();
+            return true;
+        } catch (Exception ex) {
+            logger.error("Error fetching next available slot",ex);
+        } finally {
+            dataBaseConfig.closeConnection(con);
+        }
+    	return false;
+    }
 
     public boolean saveTicket(Ticket ticket){
         Connection con = null;
         try {
             con = dataBaseConfig.getConnection();
             
-            PreparedStatement ps1 = con.prepareStatement(DBConstants.QUERY_CHECK_TICKET);
-            PreparedStatement ps2 = con.prepareStatement(DBConstants.SAVE_TICKET);
-            ps1.setString(1, ticket.getVehicleRegNumber());
-            ResultSet rs = ps1.executeQuery();
-            if (rs.next()) {
-                ps2.setInt(1,ticket.getId());
-                ps2.setInt(1,ticket.getParkingSpot().getId());
-                ps2.setString(2, ticket.getVehicleRegNumber());
-                ps2.setBoolean(3, true);
-                ps2.setDouble(4, ticket.getPrice());
-                ps2.setTimestamp(5, new Timestamp(ticket.getInTime().getTime()));
-                ps2.setTimestamp(6, (ticket.getOutTime() == null)?null: (new Timestamp(ticket.getOutTime().getTime())) );
-            } else {
-	            ps2.setInt(1,ticket.getId());
-	            ps2.setInt(1,ticket.getParkingSpot().getId());
-	            ps2.setString(2, ticket.getVehicleRegNumber());
-	            ps2.setBoolean(3, ticket.getRecurring());
-	            ps2.setDouble(4, ticket.getPrice());
-	            ps2.setTimestamp(5, new Timestamp(ticket.getInTime().getTime()));
-	            ps2.setTimestamp(6, (ticket.getOutTime() == null)?null: (new Timestamp(ticket.getOutTime().getTime())) );
-            }
-            return ps2.execute();
+            PreparedStatement ps = con.prepareStatement(DBConstants.SAVE_TICKET);
+            ps.setInt(1,ticket.getId());
+            ps.setInt(1,ticket.getParkingSpot().getId());
+            ps.setString(2, ticket.getVehicleRegNumber());
+            ps.setBoolean(3, ticket.getRecurring());
+            ps.setDouble(4, ticket.getPrice());
+            ps.setTimestamp(5, new Timestamp(ticket.getInTime().getTime()));
+            ps.setTimestamp(6, (ticket.getOutTime() == null)?null: (new Timestamp(ticket.getOutTime().getTime())) );
+            return ps.execute();
        
         } catch (Exception ex) {
             logger.error("Error fetching next available slot",ex);

@@ -110,7 +110,7 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        double price = Precision.round(0.25 * Fare.CAR_RATE_PER_HOUR, 2);
+        double price = Precision.round(0.25 * Fare.CAR_RATE_PER_HOUR, 2);// Round the result to hundredth
         assertEquals( price, ticket.getPrice());
     }
 
