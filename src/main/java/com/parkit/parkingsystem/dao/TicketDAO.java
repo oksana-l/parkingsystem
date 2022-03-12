@@ -18,16 +18,25 @@ public class TicketDAO {
 
     private static final Logger logger = LogManager.getLogger("TicketDAO");
 
-    public static DataBaseConfig dataBaseConfig = new DataBaseConfig();
+    private DataBaseConfig dataBaseConfig;
     
-    public static boolean isRecurring(Ticket ticket) {
+    public TicketDAO(DataBaseConfig dataBaseConfig) {
+		super();
+		this.dataBaseConfig = dataBaseConfig;
+	}
+
+	public boolean isRecurring(String vehicleRegNumber) {
         Connection con = null;
         try {
             con = dataBaseConfig.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.QUERY_CHECK_TICKET);
-            ps.setString(1, ticket.getVehicleRegNumber());
-            ps.execute();
-            return true;
+            ps.setString(1, vehicleRegNumber);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()) {
+            	return true; 
+            }
+            dataBaseConfig.closeResultSet(rs);
+            dataBaseConfig.closePreparedStatement(ps);
         } catch (Exception ex) {
             logger.error("Error fetching next available slot",ex);
         } finally {
@@ -57,7 +66,7 @@ public class TicketDAO {
             dataBaseConfig.closeConnection(con);
         }
 		return false;
-    }
+    } 
 
     public Ticket getTicket(String vehicleRegNumber) {
         Connection con = null;
@@ -88,28 +97,6 @@ public class TicketDAO {
         }
         return ticket;
     }
-    
-//    public int getID(String vehicleRegNumber) {
-//        Connection con = null;
-//        int id = 0;
-//        try {
-//            con = dataBaseConfig.getConnection();
-//            PreparedStatement ps = con.prepareStatement(DBConstants.GET_ID_TICKET);
-//            ps.setString(1,vehicleRegNumber);
-//            ResultSet rs = ps.executeQuery();
-//            if(rs.next()) {
-//            	id = rs.getInt(id);
-//            }
-//            dataBaseConfig.closeResultSet(rs);
-//            dataBaseConfig.closePreparedStatement(ps);
-//            
-//        } catch (Exception ex) {
-//            logger.error("Error fetching next available slot",ex);
-//        } finally {
-//            dataBaseConfig.closeConnection(con);
-//        }
-//		return id;
-//    }
 
     public boolean updateTicket(Ticket ticket) {
         Connection con = null;

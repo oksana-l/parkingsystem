@@ -32,8 +32,7 @@ public class ParkingDataBaseIT {
     private static void setUp() throws Exception{
         parkingSpotDAO = new ParkingSpotDAO();
         parkingSpotDAO.dataBaseConfig = dataBaseTestConfig;
-        ticketDAO = new TicketDAO();
-        TicketDAO.dataBaseConfig = dataBaseTestConfig;
+        ticketDAO = new TicketDAO(dataBaseTestConfig);
         dataBasePrepareService = new DataBasePrepareService();
     }
 

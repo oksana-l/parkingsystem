@@ -36,27 +36,26 @@ public class ParkingService {
                 parkingSpot.setAvailable(false);
                 parkingSpotDAO.updateParking(parkingSpot);//allot this parking space and mark it's availability as false
 
-                Date inTime = new Date();
+                Date inTime = new Date(); 
                 Ticket ticket = new Ticket();
                 int ticketID = ticket.getId();
-                if (TicketDAO.isRecurring(ticket)) {
-                	ticket.setRecurring(true);
-                } else {
-                	ticket.setRecurring(false);
-                }
 				//ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, RECURRING, PRICE, IN_TIME, OUT_TIME)
-                ticket.setId(ticketID );
+                ticket.setId(ticketID ); // ne sert a rien
                 ticket.setParkingSpot(parkingSpot);
                 ticket.setVehicleRegNumber(vehicleRegNumber);
+                ticket.setRecurring(ticketDAO.isRecurring(vehicleRegNumber));
                 ticket.setPrice(0);
                 ticket.setInTime(inTime);
                 ticket.setOutTime(null);
                 ticketDAO.saveTicket(ticket);
+                if (ticket.getRecurring()) {
+                	System.out.println("Welcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount.");      
+                }
                 System.out.println("Generated Ticket and saved in DB");
                 System.out.println("Please park your vehicle in spot number:"+parkingSpot.getId());
                 System.out.println("Recorded in-time for vehicle number:"+vehicleRegNumber+" is:"+inTime);
             }
-        }catch(Exception e){
+        }catch(Exception e){ 
             logger.error("Unable to process incoming vehicle",e);
         }
     }
@@ -80,7 +79,7 @@ public class ParkingService {
         }catch(IllegalArgumentException ie){
             logger.error("Error parsing user input for type of vehicle", ie);
         }catch(Exception e){
-            logger.error("Error fetching next available parking slot", e);
+            logger.error("Error fetching next available parking slot", e); 
         }
         return parkingSpot;
     }
@@ -110,6 +109,7 @@ public class ParkingService {
             Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
             Date outTime = new Date();
             ticket.setOutTime(outTime);
+
             fareCalculatorService.calculateFare(ticket);
             if(ticketDAO.updateTicket(ticket)) {
                 ParkingSpot parkingSpot = ticket.getParkingSpot();

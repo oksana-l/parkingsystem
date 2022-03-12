@@ -7,12 +7,12 @@ public class ParkingSpot {
     private ParkingType parkingType;
     private boolean isAvailable;
 
-    public ParkingSpot(int number, ParkingType parkingType, boolean isAvailable) {
+    public ParkingSpot (int number, ParkingType parkingType, boolean isAvailable) {
         this.number = number;
         this.parkingType = parkingType;
         this.isAvailable = isAvailable;
     }
-
+ 
     public int getId() {
         return number;
     }
@@ -49,4 +49,10 @@ public class ParkingSpot {
     public int hashCode() {
         return number;
     }
+
+	@Override
+	public String toString() {
+		return "ParkingSpot [number=" + number + ", parkingType=" + parkingType + ", isAvailable=" + isAvailable + "]";
+	}
+    
 }
