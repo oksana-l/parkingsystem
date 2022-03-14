@@ -40,7 +40,7 @@ public class ParkingService {
                 Ticket ticket = new Ticket();
                 int ticketID = ticket.getId();
 				//ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, RECURRING, PRICE, IN_TIME, OUT_TIME)
-                ticket.setId(ticketID ); // ne sert a rien
+                ticket.setId(ticketID ); // ne sert a rien ?
                 ticket.setParkingSpot(parkingSpot);
                 ticket.setVehicleRegNumber(vehicleRegNumber);
                 ticket.setRecurring(ticketDAO.isRecurring(vehicleRegNumber));
