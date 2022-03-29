@@ -22,7 +22,7 @@ public class DataBaseConfig {
     public Connection getConnection() throws ClassNotFoundException, SQLException, FileNotFoundException, IOException {
     	Properties properties = new Properties();
     	InputStream stream = new FileInputStream(new File("credentials.properties"));
-    	//stream.close();
+    	stream.close();
     	properties.load(stream);
     	String DBurl = properties.getProperty("DBurl");
 		String user = properties.getProperty("username");

@@ -42,8 +42,6 @@ public class ParkingDataBaseIT {
         
         when(inputReaderUtil.readSelection()).thenReturn(1);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
-        
-        dataBasePrepareService.clearDataBaseEntries();
     }
  
     @AfterEach
@@ -55,6 +53,8 @@ public class ParkingDataBaseIT {
     // vérifier qu'un ticket est effectivement enregistré dans la base de données et que la table de stationnement est mise à jour avec la disponibilité
     @Test
     public void testParkingACar() throws Exception{
+    	
+    	dataBasePrepareService.clearDataBaseEntries();
 
         parkingService.processIncomingVehicle();
 
@@ -66,7 +66,7 @@ public class ParkingDataBaseIT {
                 () -> Assertions.assertFalse( actualTicket.getRecurring()),
                 () -> Assertions.assertEquals( 0, actualTicket.getPrice()),
                 () -> Assertions.assertNotNull(actualTicket.getInTime()),
-                () -> Assertions.assertEquals( null, actualTicket.getOutTime())
+                () -> Assertions.assertNull(actualTicket.getOutTime())
             );
     }
  
@@ -78,12 +78,15 @@ public class ParkingDataBaseIT {
         parkingService.processExitingVehicle();
 
         Ticket expectedTicket = ticketDAO.getTicket("ABCDEF");
+        
         Assertions.assertAll("expectedTicket",
                 () -> Assertions.assertEquals( "ABCDEF", expectedTicket.getVehicleRegNumber()),
                 () -> Assertions.assertFalse( expectedTicket.getRecurring()),
                 () -> Assertions.assertEquals( 0, expectedTicket.getPrice()),
                 () -> Assertions.assertFalse( expectedTicket.getOutTime().before(expectedTicket.getInTime()))
             );
+        
+        dataBasePrepareService.clearDataBaseEntries();
     }
  
 }
